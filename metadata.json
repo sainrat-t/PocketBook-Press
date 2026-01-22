@@ -1,0 +1,5 @@
+{
+  "name": "PocketBook Press",
+  "description": "A streamlined tool to convert book manuscripts from JSON into professional pocket-format PDF files for printing.",
+  "requestFramePermissions": []
+}
