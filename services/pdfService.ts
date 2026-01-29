@@ -103,12 +103,23 @@ export const generateBodyPDF = (data: BookData, font: FontOption) => {
   // --- TITLE PAGE ---
   doc.setFontSize(18);
   doc.setFont(font, "bold");
-  doc.text(data.title, PAGE_WIDTH / 2, PAGE_HEIGHT / 3, { align: 'center' });
+  
+  // Safe width for title/subtitle on title page (leave margins)
+  const safeTitleWidth = PAGE_WIDTH - 30; // 15mm margin on each side
+  
+  const titleLines = doc.splitTextToSize(data.title, safeTitleWidth);
+  doc.text(titleLines, PAGE_WIDTH / 2, PAGE_HEIGHT / 3, { align: 'center' });
   
   if (data.subtitle) {
     doc.setFontSize(12);
     doc.setFont(font, "italic");
-    doc.text(data.subtitle, PAGE_WIDTH / 2, (PAGE_HEIGHT / 3) + 15, { align: 'center' });
+    
+    // Estimate title height to position subtitle below it
+    // Approx 7mm per line for font size 18
+    const titleHeight = titleLines.length * 8; 
+    
+    const subLines = doc.splitTextToSize(data.subtitle, safeTitleWidth);
+    doc.text(subLines, PAGE_WIDTH / 2, (PAGE_HEIGHT / 3) + titleHeight + 5, { align: 'center' });
   }
   
   // Break after title page
